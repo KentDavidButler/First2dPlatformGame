@@ -7,7 +7,10 @@ public class PlayerMovement : MonoBehaviour
 
     public Animator animator;
     private float jump;
+    private float maxFallSpeed = 3.0f;
+    private float xVelocity = 0.0f;
     private CapsuleCollider2D groundedCollider;
+    private Rigidbody2D playerRB;
 
     public bool isGrounded;
     public LayerMask whatIsGround;
@@ -18,17 +21,22 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         groundedCollider = GetComponent<CapsuleCollider2D>();
+        playerRB = GetComponent<Rigidbody2D>();
         extraJumps = 0;
-        jump = 35;
+        //jump = 35;
+        jump = 3;
     }
 
     private void FixedUpdate()
     {
-        //isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
-        //isGrounded = Physics2D.IsTouchingLayers(groundCheck, whatIsGround);
-        //isGrounded = Physics2D.OverlapCapsule(groundCheck.position, new Vector2(0.01f, 0.05f), 0, 0);
-        //isGrounded = groundedCollider.IsTouchingLayers(8);
-        //isGrounded = groundedCollider.isTrigger;
+        if(GetComponent<Rigidbody2D>().velocity.y > maxFallSpeed)
+        {
+            //xVelocity = GetComponent<Rigidbody2D>().velocity.Set(GetComponent<Rigidbody2D>().velocity.x;
+            //GetComponent<Rigidbody2D>().velocity = GetComponent<Rigidbody2D>().velocity.Set( xVelocity, maxFallSpeed);
+            //playerRB.velocity = Vector2.ClampMagnitude(playerRB.velocity, maxFallSpeed);
+            //Debug.Log(playerRB.velocity + "Velocity blah blah");
+        }
+
     }
 
 
@@ -41,11 +49,8 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded == true && extraJumps > 0)
         {
             extraJumps = 0;
-            jump = 35;
+            //jump = 3;
         }
-
-        //animator.SetFloat("Horizontal", Input.GetAxis("Horizontal"));
-        //animator.SetBool("IsGrounded", isGrounded);
 
         Vector3 horizontal = new Vector3(Input.GetAxis("Horizontal"), 0.0f, 0.0f);
         transform.position = transform.position + horizontal * Time.deltaTime;
@@ -56,13 +61,15 @@ public class PlayerMovement : MonoBehaviour
             if(isGrounded)
             {
                 isGrounded = false;
-                GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jump), ForceMode2D.Impulse);
+                //GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jump), ForceMode2D.Impulse); //trying new form of jumping using velocity
+                playerRB.velocity = Vector2.up * jump;
                 extraJumps++;
             }
             else if(extraJumps == 1)
             {
-                jump = 25;
-                GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jump), ForceMode2D.Impulse);
+                //jump = 2;
+                //GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jump), ForceMode2D.Impulse);
+                playerRB.velocity = Vector2.up * jump;
                 extraJumps++;
             }
             else
