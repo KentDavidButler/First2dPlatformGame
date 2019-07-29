@@ -8,10 +8,10 @@ public class PlayerMovement : MonoBehaviour
     public Animator animator;
     public LayerMask whatIsGround;
     private float jump;
-    private float maxFallSpeed = -5.0f;
+    private float maxFallSpeed = -4.5f;
     private Rigidbody2D playerRB;
 
-    private bool isGrounded;
+    public bool isGrounded;
     
 
     private int extraJumps;
@@ -26,13 +26,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(GetComponent<Rigidbody2D>().velocity.y);
         if(GetComponent<Rigidbody2D>().velocity.y < maxFallSpeed)
         {
             playerRB.velocity = new Vector2(0.0f, maxFallSpeed);
-            Debug.Log(playerRB.velocity + "Velocity blah blah");
         }
-
     }
 
 
@@ -59,6 +56,14 @@ public class PlayerMovement : MonoBehaviour
                 playerRB.velocity = Vector2.up * jump;
                 extraJumps++;
             }
+            else if(extraJumps == 0)
+            {
+                // this is so the player is able to jump once after walking off platform
+                // without jumping prior.
+                isGrounded = false;
+                playerRB.velocity = Vector2.up * jump;
+                extraJumps =+ 5;
+            }
             else if(extraJumps == 1)
             {
                 playerRB.velocity = Vector2.up * jump;
@@ -81,5 +86,13 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = true;
         }
  
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Ground")
+        {
+            isGrounded = false;
+        }
     }
 }
