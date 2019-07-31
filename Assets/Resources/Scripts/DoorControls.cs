@@ -20,7 +20,8 @@ public class DoorControls : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        animatorDoorTop.SetBool("IsOpen", isOpen);
-        animatorDoorBtm.SetBool("IsOpen", isOpen);
+        isOpen = DoorSwitch.GetComponent<SwitchControls>().GetSwitchState();
+        animatorDoorTop.SetBool("IsOpenTop", isOpen);
+        animatorDoorBtm.SetBool("IsOpenBtm", isOpen);
     }
 }
